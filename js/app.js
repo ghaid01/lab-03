@@ -1,0 +1,117 @@
+function Horns(data) {
+    this.image_url = data.image_url;
+    this.title = data.title;
+    this.description = data.description;
+    this.keyword = data.keyword;
+    this.horns = data.horns;
+    Horns.all.push(this);
+  }
+  Horns.all = [];
+  
+  Horns.prototype.render = function() {
+  
+    // Create a new empty div tag
+    let hornOutput = $('<div></div>');
+        hornOutput.addClass(this.keyword);
+  
+    // clone (copy) the html from inside the photo-template
+    let template = $('#photo-template').html();
+  
+    // Add the template to the output div
+    hornOutput.html( template );
+  
+    // Put the data in
+    hornOutput.find('h2').text( this.title );
+    hornOutput.find('img').attr('src', this.image_url);
+    hornOutput.find('p').text(this.description);
+  
+    $('main').append(hornOutput);
+  
+  };
+  
+  function populateSelectBox() {
+    let seen = {};
+    let select = $('select');
+    Horns.all.forEach( (horn) => {
+      if ( ! seen[horn.keyword] ) {
+        let option = `<option value="${horn.keyword}">${horn.keyword}</option>`;
+        select.append(option);
+        seen[horn.keyword] = true;
+      }
+    });
+  
+    console.log(seen);
+  }
+  
+  $('select').on('change', function() {
+    let selected = $(this).val();
+    $('div').hide();
+    $(`.${selected}`).fadeIn(800);
+  });
+function readData(){
+  $.get('../data/page-1.json')
+    .then( data => {
+      data.forEach( (thing) => {
+        let horn = new Horns(thing);
+        horn.render();
+      });
+       })
+       .then( () => populateSelectBox() );
+
+  }
+    function readData2(){
+    $.get('../data/page-2.json')
+    .then( data => {
+      data.forEach( (thing) => {
+        let horn = new Horns(thing);
+        horn.render();
+      });
+    })
+    // .then( () => populateSelectBox() );
+    }
+  
+
+// function Horns2(data){
+//       this.img_url = data.img_url;
+//       this.title = data.title;
+//       this.description = data.description;
+//       this.keyword = data.keyword;
+//       this.horns = data.horns;
+//       Horns2.all.push(this);
+
+//     }
+    
+    // Horns2.all=[];
+
+
+// $.get('../data/page-2.json')
+//     .then( data => {
+//       data.forEach( (thing) => {
+//         let horn = new Horns(thing);
+//         horn.render();
+//       });
+//     })
+
+    $('#page-2').on('click', function(){
+      let g = $('nav').hide();
+      $(() => readData2());
+      let horn = new Horns(thing);
+      horn.render();
+      });
+      
+    //   $.get('../data/page-1.json')
+    // .then ( data => {
+    //   console.log(data)
+    //   data.forEach( (thing) => {
+    //     let horn = new Horns(thing);
+    //     horn.render();
+      
+    //   });
+    // })
+    $('#page-1').on('click', function(){
+    //  let g = $('nav').show();
+      $(() => readData());
+      let horn = new Horns(thing);
+      horn.render();
+      });
+      
